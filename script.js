@@ -10,7 +10,10 @@
     target: {x: -9999, y: -9999},
     flow: {x: 1, y: 0},
     motion: 0,
+    excitation: 0,
     pointerInside: false,
+    pointerTime: 0,
+    lastFrame: 0,
     nodes: [],
     t: 0
   };
@@ -40,9 +43,12 @@
     }
   }
 
-  function draw() {
-    state.t += 0.004;
-    state.motion *= 0.985;
+  function draw(timestamp) {
+    const delta = state.lastFrame ? Math.min((timestamp - state.lastFrame) / 1000, 0.05) : 0;
+    state.lastFrame = timestamp;
+    state.t += delta;
+    state.excitation *= Math.exp(-delta / 0.45);
+    state.motion += (state.excitation - state.motion) * (1 - Math.exp(-delta / 0.12));
     state.mouse.x += (state.target.x - state.mouse.x) * 0.035;
     state.mouse.y += (state.target.y - state.mouse.y) * 0.035;
 
@@ -50,7 +56,8 @@
     ctx.clearRect(0, 0, state.w, state.h);
 
     const maxDist = 115;
-    const mouseRadius = 220;
+    const mouseRadius = 155;
+    const flowRadius = 140;
 
     for (const n of state.nodes) {
       const dxm = n.ox - state.mouse.x;
@@ -73,8 +80,9 @@
           const midX = (a.x + b.x) / 2;
           const midY = (a.y + b.y) / 2;
           const cursorDistance = Math.hypot(midX - state.target.x, midY - state.target.y);
-          const current = state.motion * Math.max(0, 1 - cursorDistance / 220);
-          const alpha = (1 - d / maxDist) * (0.07 + current * 0.2);
+          const falloff = Math.max(0, 1 - cursorDistance / flowRadius);
+          const current = state.motion * falloff * falloff;
+          const alpha = (1 - d / maxDist) * (0.07 + current * 0.08);
           ctx.strokeStyle = `rgba(52, 56, 50, ${alpha})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
@@ -82,13 +90,13 @@
           ctx.lineTo(b.x, b.y);
           ctx.stroke();
 
-          if (current > 0.015 && (i * 31 + j * 17) % 11 === 0) {
+          if ((i * 31 + j * 17) % 17 === 0) {
             const phase = ((i * 37 + j * 13) % 100) / 100;
             const direction = dx * state.flow.x + dy * state.flow.y <= 0 ? 1 : -1;
-            const progress = (state.t * (0.5 + state.motion * 2.5) * direction + phase + 1) % 1;
-            ctx.fillStyle = `rgba(101, 128, 65, ${0.35 + current * 0.65})`;
+            const progress = (state.t * 0.12 * direction + phase + 1) % 1;
+            ctx.fillStyle = `rgba(101, 128, 65, ${current * 0.55})`;
             ctx.beginPath();
-            ctx.arc(a.x + dx * progress, a.y + dy * progress, 2 + current * 1.3, 0, Math.PI * 2);
+            ctx.arc(a.x + dx * progress, a.y + dy * progress, 1.1 + current * 0.35, 0, Math.PI * 2);
             ctx.fill();
           }
         }
@@ -114,9 +122,14 @@
       const dy = e.clientY - state.target.y;
       const distance = Math.hypot(dx, dy);
       if (distance > 0) {
-        state.flow.x = dx / distance;
-        state.flow.y = dy / distance;
-        state.motion = Math.min(1, state.motion + Math.min(distance / 45, 0.3));
+        const elapsed = Math.max((e.timeStamp - state.pointerTime) / 1000, 0.008);
+        const blend = Math.min(distance / 80, 0.2);
+        state.flow.x += (dx / distance - state.flow.x) * blend;
+        state.flow.y += (dy / distance - state.flow.y) * blend;
+        const flowLength = Math.hypot(state.flow.x, state.flow.y) || 1;
+        state.flow.x /= flowLength;
+        state.flow.y /= flowLength;
+        state.excitation = Math.max(state.excitation, Math.min(distance / elapsed / 900, 0.5));
       }
     } else {
       state.pointerInside = true;
@@ -125,6 +138,7 @@
     }
     state.target.x = e.clientX;
     state.target.y = e.clientY;
+    state.pointerTime = e.timeStamp;
   }, {passive:true});
   window.addEventListener('pointerleave', () => {
     state.pointerInside = false;
