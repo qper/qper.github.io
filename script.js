@@ -73,6 +73,15 @@
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
           ctx.stroke();
+
+          if ((i * 31 + j * 17) % 211 === 0) {
+            const phase = ((i * 37 + j * 13) % 100) / 100;
+            const progress = (state.t * 0.4 + phase) % 1;
+            ctx.fillStyle = 'rgba(112, 126, 99, 0.55)';
+            ctx.beginPath();
+            ctx.arc(a.x + dx * progress, a.y + dy * progress, 1.25, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
       }
     }
