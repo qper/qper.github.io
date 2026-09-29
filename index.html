@@ -1,22 +1,257 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-        * {
-            font-family: system-ui;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizelegibility;
-            font-weight: 300;
-        }
-    </style>
-    <meta http-equiv="refresh" content="1; URL=https://linkedin.com/in/just-smirnov" />
-    <title>Aleksei Smirnov aka qper</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Personal site for systems, experiments and engineering notes.">
+  <title>Löscha — Platform / infrastructure engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 </head>
 <body>
-    You will be redirected to Alexey Smirnov's Linkedin profile <a href="https://linkedin.com/in/just-smirnov">Aleksei Smirnov Linkedin profile</a>
+  <canvas id="field" aria-hidden="true"></canvas>
+
+  <header class="site-header container">
+    <a class="brand" href="#top" aria-label="Home">
+      <span class="brand-mark">L</span>
+      <span class="brand-name">Löscha</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#lab">Lab</a>
+      <a href="#notes">Notes</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <div class="hero-copy">
+        <p class="eyebrow">Platform / infrastructure engineering</p>
+        <h1>Systems, experiments<br>and notes.</h1>
+        <p class="lede">
+          A quiet collection of things built, investigated, measured and documented.
+        </p>
+      </div>
+      <div class="hero-meta mono">
+        <span>Berlin</span>
+        <span>2026</span>
+      </div>
+    </section>
+
+    <section class="section container" id="work">
+      <div class="section-heading">
+        <span class="section-index mono">01</span>
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <p class="section-note">A few pieces worth looking at more closely.</p>
+        </div>
+      </div>
+
+      <div class="entries">
+        <a class="entry" href="#entry-1">
+          <div class="entry-number mono">01</div>
+          <div class="entry-main">
+            <h2>Infrastructure investigation</h2>
+            <p>Question → experiment → observation → result.</p>
+          </div>
+          <div class="entry-meta mono">2026</div>
+          <div class="entry-arrow">↗</div>
+        </a>
+
+        <a class="entry" href="#entry-2">
+          <div class="entry-number mono">02</div>
+          <div class="entry-main">
+            <h2>Reproducible experiment</h2>
+            <p>A small system made repeatable enough to inspect.</p>
+          </div>
+          <div class="entry-meta mono">2026</div>
+          <div class="entry-arrow">↗</div>
+        </a>
+
+        <a class="entry" href="#entry-3">
+          <div class="entry-number mono">03</div>
+          <div class="entry-main">
+            <h2>Failure mode study</h2>
+            <p>What was expected, what actually happened, and why.</p>
+          </div>
+          <div class="entry-meta mono">2025</div>
+          <div class="entry-arrow">↗</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section container split" id="lab">
+      <div class="section-heading">
+        <span class="section-index mono">02</span>
+        <div>
+          <p class="eyebrow">Lab</p>
+          <p class="section-note">Experiments, prototypes and unfinished questions.</p>
+        </div>
+      </div>
+
+      <div class="lab-list">
+        <article class="lab-item">
+          <div class="lab-status mono">ONGOING</div>
+          <div>
+            <h3>Small systems, observed closely</h3>
+            <p>Short experiments with a deliberately small surface area.</p>
+          </div>
+        </article>
+        <article class="lab-item">
+          <div class="lab-status mono">COMPLETE</div>
+          <div>
+            <h3>One question at a time</h3>
+            <p>Build just enough to replace assumptions with evidence.</p>
+          </div>
+        </article>
+        <article class="lab-item">
+          <div class="lab-status mono">ABANDONED</div>
+          <div>
+            <h3>Useful dead ends</h3>
+            <p>Not every experiment needs to become a finished project.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section container" id="notes">
+      <div class="section-heading">
+        <span class="section-index mono">03</span>
+        <div>
+          <p class="eyebrow">Notes</p>
+          <p class="section-note">Short technical observations, investigations and measurements.</p>
+        </div>
+      </div>
+
+      <div class="notes-grid">
+        <a class="note" href="#entry-1">
+          <span class="note-date mono">2026 / 09</span>
+          <h3>When a system behaves differently than expected</h3>
+          <p>Tracing an observation back through the layers.</p>
+        </a>
+        <a class="note" href="#entry-2">
+          <span class="note-date mono">2026 / 08</span>
+          <h3>Making a small experiment reproducible</h3>
+          <p>What belongs in the artifact, and what does not.</p>
+        </a>
+        <a class="note" href="#entry-3">
+          <span class="note-date mono">2025 / 11</span>
+          <h3>Notes from a failed first attempt</h3>
+          <p>Keeping the useful evidence after the original idea is gone.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="section container about-section" id="about">
+      <div class="section-heading">
+        <span class="section-index mono">04</span>
+        <div>
+          <p class="eyebrow">About</p>
+          <p class="section-note">A little context, without turning the page into a résumé.</p>
+        </div>
+      </div>
+      <div class="about-copy">
+        <p class="about-lede">
+          Platform and infrastructure engineering, with a preference for understanding systems by building small, testable things.
+        </p>
+        <p>
+          The rest of this site is intentionally more concrete: investigations, experiments, notes and artifacts that can be looked at directly.
+        </p>
+      </div>
+    </section>
+
+    <section class="detail container" id="entry-1">
+      <div class="detail-label mono">WORK / 01</div>
+      <div class="detail-content">
+        <p class="eyebrow">Investigation</p>
+        <h2>Infrastructure investigation</h2>
+        <div class="detail-grid">
+          <div>
+            <span class="detail-key mono">Question</span>
+            <p>What was unclear?</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Experiment</span>
+            <p>What was built to observe it?</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Observation</span>
+            <p>What actually happened?</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Result</span>
+            <p>What became known?</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail container" id="entry-2">
+      <div class="detail-label mono">WORK / 02</div>
+      <div class="detail-content">
+        <p class="eyebrow">Experiment</p>
+        <h2>Reproducible experiment</h2>
+        <div class="detail-grid">
+          <div>
+            <span class="detail-key mono">Context</span>
+            <p>Small enough to understand end to end.</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Artifact</span>
+            <p>Configuration, measurements and notes.</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Status</span>
+            <p>Complete enough to repeat.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail container" id="entry-3">
+      <div class="detail-label mono">WORK / 03</div>
+      <div class="detail-content">
+        <p class="eyebrow">Failure mode study</p>
+        <h2>What changed when the system failed?</h2>
+        <div class="detail-grid">
+          <div>
+            <span class="detail-key mono">Expected</span>
+            <p>The behaviour that was assumed.</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Observed</span>
+            <p>The behaviour that was measured.</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Cause</span>
+            <p>The evidence behind the explanation.</p>
+          </div>
+          <div>
+            <span class="detail-key mono">Next</span>
+            <p>What the experiment changed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <div class="footer-left">
+      <span>© 2026 Löscha</span>
+      <span class="mono">personal / engineering</span>
+    </div>
+    <div class="footer-links">
+      <a href="#" aria-label="GitHub">GitHub</a>
+      <a href="#" aria-label="LinkedIn">LinkedIn</a>
+      <a href="#" aria-label="CV">CV</a>
+      <a href="mailto:hello@example.com">Email</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
