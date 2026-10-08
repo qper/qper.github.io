@@ -1,44 +1,66 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+name: Deploy Jekyll site and JavaScript course
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build the course
+        working-directory: ./js
+        run: npm run build
+
+      - name: Test the course
+        working-directory: ./js
+        run: npm test
+
+      - name: Check the generated course entry page
+        run: test -s js/dist/js/index.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Build with Jekyll
+
+      - name: Build the landing page with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
+
+      - name: Put the generated course at /js/
+        run: |
+          rm -rf _site/js
+          mkdir -p _site/js
+          cp -a js/dist/js/. _site/js/
+          test -s _site/index.html
+          test -s _site/CNAME
+          test -s _site/js/index.html
+          test -s _site/js/lessons/14-game/index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages
