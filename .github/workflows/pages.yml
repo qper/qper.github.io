@@ -1,45 +1,57 @@
-name: Build and publish site with physics course
-# Manual only. Nothing is sent by a local build or by pushing a commit.
+name: Deploy qper.github.io
+
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
-  group: pages
+  group: github-pages
   cancel-in-progress: false
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Protect existing main site
-        run: |
-          if [ ! -f public/index.html ]; then
-            echo 'Place the existing main site output in public/ (including CNAME), or integrate the course build into your existing workflow. Refusing to deploy a course-only root.'
-            exit 1
-          fi
-      - name: Build root site and course
-        run: |
-          mkdir -p dist
-          cp -a public/. dist/
-          npm run build
-          npm test
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Deploy combined site
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify landing page and prebuilt course
+        run: |
+          test -s index.html
+          test -s CNAME
+          test -s script.js
+          test -s styles.css
+          test -d img
+          test -s js/index.html
+          test -s js/assets/app.js
+          test -s js/lessons/14-game/index.html
+
+      - name: Prepare the combined Pages artifact
+        run: |
+          mkdir -p _site
+          cp -a CNAME img index.html script.js styles.css js _site/
+          test -s _site/index.html
+          test -s _site/CNAME
+          test -s _site/js/index.html
+          test -s _site/js/lessons/14-game/index.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the complete site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
