@@ -1,4 +1,4 @@
-name: Deploy Jekyll site and JavaScript course
+name: Deploy landing page and JavaScript course
 
 on:
   push:
@@ -34,27 +34,28 @@ jobs:
         working-directory: ./js
         run: npm test
 
-      - name: Check the generated course entry page
-        run: test -s js/dist/js/index.html
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Build the landing page with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
-
-      - name: Put the generated course at /js/
+      - name: Assemble the Pages site
         run: |
-          rm -rf _site/js
+          test -s index.html
+          test -s CNAME
+          test -d img
+          test -s script.js
+          test -s styles.css
+          test -s js/dist/js/index.html
+          test -s js/dist/js/lessons/14-game/index.html
+
+          rm -rf _site
           mkdir -p _site/js
+          cp -a CNAME img index.html script.js styles.css _site/
           cp -a js/dist/js/. _site/js/
+
           test -s _site/index.html
           test -s _site/CNAME
           test -s _site/js/index.html
           test -s _site/js/lessons/14-game/index.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
