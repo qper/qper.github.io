@@ -1,0 +1,45 @@
+name: Build and publish site with physics course
+# Manual only. Nothing is sent by a local build or by pushing a commit.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Protect existing main site
+        run: |
+          if [ ! -f public/index.html ]; then
+            echo 'Place the existing main site output in public/ (including CNAME), or integrate the course build into your existing workflow. Refusing to deploy a course-only root.'
+            exit 1
+          fi
+      - name: Build root site and course
+        run: |
+          mkdir -p dist
+          cp -a public/. dist/
+          npm run build
+          npm test
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy combined site
+        id: deployment
+        uses: actions/deploy-pages@v4
